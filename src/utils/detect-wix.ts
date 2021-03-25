@@ -1,3 +1,5 @@
+const path = require('path');
+
 export interface HasBinaryResult {
   has: boolean;
   version: string | null;
@@ -9,7 +11,13 @@ export interface HasBinaryResult {
  * @returns {HasBinaryResult}
  */
 export function hasCandle(): HasBinaryResult {
-  return hasBinary('candle -?');
+  let result = hasBinary('candle -?');
+  if (!result.has) {
+    result = hasBinary(`"${path.join(process.env.WIX, 'bin', 'candle.exe')}"`);
+  }
+
+  console.log('Using WiX environment variable');
+  return result;
 }
 
 /**
@@ -18,7 +26,12 @@ export function hasCandle(): HasBinaryResult {
  * @returns {HasBinaryResult}
  */
 export function hasLight(): HasBinaryResult {
-  return hasBinary('light -?');
+  let result = hasBinary('light -?');
+  if (!result.has) {
+    result = hasBinary(`"${path.join(process.env.WIX, 'bin', 'light.exe')}"`);
+  }
+  console.log('Using WiX environment variable');
+  return result;
 }
 
 /**
